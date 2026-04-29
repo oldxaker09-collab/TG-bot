@@ -1,6 +1,20 @@
 import telebot
 from telebot import types
 import time
+import http.server
+import socketserver
+import threading
+import telebot
+
+# --- MANA SHU QISMNI QO'SHING (Render aldanishi uchun) ---
+def run_server():
+    PORT = 8080
+    Handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        httpd.serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
+# -------------------------------------------------------
 
 # 1. BOT TOKENI
 TOKEN = '8346132695:AAEU4yjmhuKsM4xx8CLbx_cTN3zkE2RbuDw'
