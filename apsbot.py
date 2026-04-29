@@ -69,8 +69,8 @@ print("Berdiyev Maqsadjonning boti GitHub/Server uchun tayyor!")
 
 while True:
     try:
-        bot.polling(none_stop=True, interval=0, timeout=25)
+        bot.polling(none_stop=True, interval=0, timeout=2500)
     except Exception as e:
-        print(f"Xato yuz berdi, 5 soniyadan so'ng qayta ulanadi: {e}")
+        print(f"Xato yuz berdi, 5 oniyadan so'ng qayta ulanadi: {e}")
         time.sleep(5)
         
