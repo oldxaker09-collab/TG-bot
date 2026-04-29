@@ -1,0 +1,62 @@
+import telebot
+from telebot import types
+import time
+
+# 1. BOT TOKENI
+TOKEN = '8346132695:AAEU4yjmhuKsM4xx8CLbx_cTN3zkE2RbuDw'
+bot = telebot.TeleBot(TOKEN)
+
+# 2. BARCHA O'YINLAR VA FAYLLAR LUG'ATI
+GAMES = {
+    "Avengers (Cheat) 🦸‍♂️": "BQACAgIAAxkBAAMIafGSpq_HWjOZYtONOdjcUtoNWqIAAh84AAI6B_FIwNZQVk5E5ig7BA",
+    "Minecraft 🎮": "BQACAgEAAxkBAAMYafHHw8Cxr_GZV5tK4adB-AUJ3lsAApIEAAJsxwFGIXwEfez2LFo7BA",
+    "SFG2 (Original) 🔫": "BQACAgQAAxkBAAMjafHLMkthksi9RMN4Z_9l9UEuU_wAAugJAAJfhzlTfQWvOuqQwYY7BA",
+    "Mototsikl o'yini 🏍️": "BQACAgIAAxkBAAMfafHJe48yaFLXCkF7-YJ45bxD13UAAjNxAAKe_VlIgDOtsfQiHkk7BA",
+    "Spotify Premium 🎵": "BQACAgIAAxkBAAMeafHJe8_-qXe8_1m9p8A8m0Q6flAAAup9AAKDSVFLtTlfzMHnXHU7BA",
+    "iPhone Launcher 📱": "BQACAgQAAxkBAAMlafHL1PjhI1MuW3jWGWw9RXBk2a0AAjcPAAKkq-lQFkKb3s8bqXQ7BA",
+    "Game Booster 🚀": "BQACAgQAAxkBAAMnafHME7bi4ZtX-5LbE5-MvCJ4VzEAAooNAALYHBlRuzhJfm57IiU7BA",
+    "Rington 🔔": "BQACAgIAAxkBAAMdafHJe62yyZWB09VdS0haN_3H-qYAApFoAAJMhShLrkO45zAJ5DU7BA"
+}
+
+# 3. START BUYRUG'I VA TUGMALAR
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    buttons = [types.KeyboardButton(name) for name in GAMES.keys()]
+    markup.add(*buttons)
+    
+    bot.send_message(
+        message.chat.id, 
+        "Meni Berdiyev Maqsadjon yaratgan!\n\nYuklamoqchi bo'lgan ilovangizni tanlang:", 
+        reply_markup=markup
+    )
+
+# 4. TUGMA BOSILGANDA FAYL YUBORISH
+@bot.message_handler(func=lambda message: message.text in GAMES)
+def send_file(message):
+    file_id = GAMES[message.text]
+    try:
+        bot.send_document(message.chat.id, file_id)
+    except Exception as e:
+        bot.send_message(message.chat.id, f"Xatolik yuz berdi: {e}")
+
+# 5. YANGI FAYL YUBORSANGIZ ID-SINI ANIQLASH
+@bot.message_handler(content_types=['document', 'audio', 'video'])
+def get_id(message):
+    f_id = ""
+    if message.document: f_id = message.document.file_id
+    elif message.audio: f_id = message.audio.file_id
+    elif message.video: f_id = message.video.file_id
+    
+    bot.reply_to(message, f"Yangi fayl ID-si:\n\n`{f_id}`", parse_mode="Markdown")
+
+# 6. BOTNI 24/7 REJIMDA USHLAB TURUVCHI QISM (POLLING)
+print("Berdiyev Maqsadjonning boti GitHub/Server uchun tayyor!")
+
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0, timeout=25)
+    except Exception as e:
+        print(f"Xato yuz berdi, 5 soniyadan so'ng qayta ulanadi: {e}")
+        time.sleep(5)
+        

@@ -1,2 +1,0 @@
-# TG-bot
-Faster bot
